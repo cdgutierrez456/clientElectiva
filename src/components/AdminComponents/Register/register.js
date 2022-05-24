@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { signUpApi } from "../../../api/user";
 import {
@@ -47,6 +47,38 @@ export const RegisterForm = () => {
     }
     if (type === "checkbox") {
       setFormValid({ ...formValid, [name]: e.target.checked });
+    }
+  };
+
+  const register = async (e) => {
+    e.preventDefault();
+    const emailVal = inputs.email;
+    const passwordVal = inputs.password;
+    const repeatPasswordVal = inputs.repeatPassword;
+    const privacyPolicyVal = inputs.privacyPolicy;
+
+    if (!emailVal || !passwordVal || !repeatPasswordVal || !privacyPolicyVal) {
+      notification["error"]({
+        message: "Todos los campos son obigatorios",
+      });
+    } else {
+      if (passwordVal !== repeatPasswordVal) {
+        notification["error"]({
+          message: "Las contraseñas tienen que ser iguales",
+        });
+      } else {
+        const result = await signUpApi(inputs);
+        if (!result.user) {
+          notification["error"]({
+            message: result.message,
+          });
+        } else {
+          notification["success"]({
+            message: result.message,
+          });
+          resendForm();
+        }
+      }
     }
   };
 };
