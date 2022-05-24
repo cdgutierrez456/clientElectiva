@@ -1,8 +1,55 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { signUpApi } from "../../../api/user";
+import {
+  emailValidation,
+  minLengthValidation,
+} from "../../../validations/FormValidations";
 
 import "./register.scss";
+
+export const RegisterForm = () => {
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+    repeatPassword: "",
+    privacyPolicy: false,
+  });
+  const [formValid, setFormValid] = useState({
+    email: false,
+    password: false,
+    repeatPassword: false,
+    privacyPolicy: false,
+  });
+
+  const changeForm = (e) => {
+    if (e.target.name === "privacyPolicy") {
+      setInputs({
+        ...inputs,
+        [e.target.name]: e.target.checked,
+      });
+    } else {
+      setInputs({
+        ...inputs,
+        [e.target.name]: e.target.value,
+      });
+    }
+  };
+
+  const inputValidation = (e) => {
+    const { type, name } = e.target;
+    if (type === "email") {
+      setFormValid({ ...formValid, [name]: emailValidation(e.target) });
+    }
+    if (type === "password") {
+      setFormValid({ ...formValid, [name]: emailValidation(e.target, 6) });
+    }
+    if (type === "checkbox") {
+      setFormValid({ ...formValid, [name]: e.target.checked });
+    }
+  };
+};
 
 export const Register = () => {
   const [inputs, setInputs] = useState({
