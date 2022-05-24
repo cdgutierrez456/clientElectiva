@@ -6,3 +6,12 @@
   }
 }
 
+.success {
+  border: 1px solid $success;
+  background: $background-success;
+}
+
+.error {
+  border: 1px solid $error;
+  background: $background-error;
+}
